@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Aviator Game - Telegram Mini App</title>
+    
+    <!-- Original game styles -->
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    
+    <!-- Telegram Mini App SDK -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    
+    <!-- Game dependencies -->
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/anime.min.js"></script>
+    
+    <style>
+        /* Telegram Mini App specific styles */
+        body {
+            background: var(--tg-theme-bg-color, #fff);
+            color: var(--tg-theme-text-color, #000);
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        
+        #game-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+        
+        /* Adapt game UI for Telegram */
+        .tg-button {
+            background: var(--tg-theme-button-color, #2481cc);
+            color: var(--tg-theme-button-text-color, #fff);
+            border: none;
+            border-radius: 8px;
+            padding: 8px 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <!-- Game content will be loaded here -->
+    </div>
+
+    <script>
+        // Initialize Telegram Mini App
+        let tg = window.Telegram.WebApp;
+        
+        // Expand to full height
+        tg.expand();
+        
+        // Handle Telegram theme changes
+        tg.onEvent('themeChanged', function() {
+            document.documentElement.style.setProperty('--tg-theme-bg-color', tg.backgroundColor);
+            document.documentElement.style.setProperty('--tg-theme-text-color', tg.textColor);
+            document.documentElement.style.setProperty('--tg-theme-button-color', tg.buttonColor);
+            document.documentElement.style.setProperty('--tg-theme-button-text-color', tg.buttonTextColor);
+        });
+
+        // Initialize game with Telegram user data
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get user data from Telegram
+            const user = tg.initDataUnsafe?.user || {};
+            
+            // Initialize game with Telegram user data
+            window.initGame = function() {
+                // Load game content
+                fetch('crash.blade.php')
+                    .then(response => response.text())
+                    .then(html => {
+                        document.getElementById('game-container').innerHTML = html;
+                        
+                        // Initialize game with Telegram-specific configurations
+                        if (window.initAviator) {
+                            window.initAviator({
+                                userId: user.id,
+                                username: user.username,
+                                telegramAuth: true,
+                                paymentProvider: 'telegram'
+                            });
+                        }
+                    });
+            };
+
+            // Start game initialization
+            initGame();
+        });
+
+        // Handle Telegram payments
+        function handleTelegramPayment(amount) {
+            tg.MainButton.text = `Pay ${amount} USD`;
+            tg.MainButton.show();
+            tg.MainButton.onClick(() => {
+                // Implement Telegram payment flow
+                tg.showPopup({
+                    title: 'Processing Payment',
+                    message: 'Please confirm your payment in Telegram',
+                    buttons: [{
+                        type: 'ok',
+                        text: 'OK'
+                    }]
+                });
+            });
+        }
+
+        // Handle back button
+        tg.BackButton.onClick(() => {
+            // Implement proper game state cleanup
+            if (window.cleanupGame) {
+                window.cleanupGame();
+            }
+            tg.close();
+        });
+    </script>
+</body>
+</html> 

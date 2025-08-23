@@ -1,0 +1,88 @@
+# Laravel specific files
+/demo/laravel/.env
+/demo/laravel/.env.backup
+/demo/laravel/.phpunit.result.cache
+/demo/laravel/artisan
+/demo/laravel/node_modules
+/demo/laravel/public/hot
+/demo/laravel/public/storage
+/demo/laravel/storage/*.key
+/demo/laravel/storage/app/public/*
+/demo/laravel/storage/framework/cache/data/*
+/demo/laravel/storage/framework/sessions/*
+/demo/laravel/storage/framework/testing/*
+/demo/laravel/storage/framework/views/*
+/demo/laravel/storage/logs/*
+/demo/laravel/vendor
+/demo/laravel/composer.lock
+/demo/laravel/package-lock.json
+
+# Exclude embedded git repositories
+agents/
+
+# General Laravel files
+*.env
+*.env.local
+*.env.staging
+*.env.production
+
+# Dependency directories
+node_modules/
+vendor/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Mac system files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Crypto sensitive files
+*.key
+*.pem
+private-key.json
+
+# Temporary files
+tmp/
+temp/
+.tmp/
+
+# Database
+*.sqlite
+*.sqlite3
+
+# Sensitive configuration
+config/database.php.backup
+config/app.php.backup
+
+# Build files
+dist/
+build/
+
+# Cache files
+.cache/
+.parcel-cache/
+
+# Error logs
+error_log
