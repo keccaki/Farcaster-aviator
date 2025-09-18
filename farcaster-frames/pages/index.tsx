@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
-import { sdk } from '@farcaster/miniapp-sdk'
+import { MiniAppProvider, useMiniApp } from '@farcaster/miniapp-sdk'
 
-export default function AviatorMiniApp() {
+const GameScreen = () => {
+  const { sdk } = useMiniApp()
   const [gameState, setGameState] = useState({
     status: 'waiting',
     multiplier: 1.0,
@@ -35,7 +36,7 @@ export default function AviatorMiniApp() {
     }
 
     initializeApp()
-  }, [])
+  }, [sdk])
 
   // Fetch current game state
   const fetchGameState = async () => {
@@ -133,35 +134,37 @@ export default function AviatorMiniApp() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 text-white">
+    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 text-white">
       {/* Header */}
-      <div className="text-center py-8">
-        <h1 className="text-4xl font-bold mb-2">🚀 AVIATOR CRASH GAME</h1>
-        <p className="text-slate-300">by keccak</p>
+      <div className="text-center py-6">
+        <h1 className="text-7xl font-bold mb-3">🚀 AVIATOR</h1>
+        <h2 className="text-4xl font-semibold mb-2 text-yellow-300">CRASH GAME</h2>
+        <p className="text-2xl text-green-300 font-medium">Ready to Fly!</p>
+        <p className="text-lg text-gray-200 mt-2">Click Play to start betting!</p>
       </div>
 
       {/* Game Status */}
-      <div className="text-center mb-8">
-        <div className={`text-6xl font-bold mb-4 ${getStatusColor()}`}>
+      <div className="text-center mb-6">
+        <div className={`text-8xl font-bold mb-4 ${getStatusColor()}`}>
           {getStatusText()}
         </div>
         
         {gameState.status === 'flying' && (
-          <div className="text-5xl font-bold text-orange-400 mb-2">
+          <div className="text-9xl font-bold text-orange-400 mb-4 animate-pulse">
             {gameState.multiplier.toFixed(2)}x
           </div>
         )}
         
         {gameState.status === 'crashed' && (
-          <div className="text-3xl text-red-400 mb-2">
+          <div className="text-6xl text-red-400 mb-4">
             Crashed at {gameState.multiplier.toFixed(2)}x
           </div>
         )}
       </div>
 
       {/* Instructions */}
-      <div className="text-center mb-8">
-        <p className="text-slate-300 text-lg">
+      <div className="text-center mb-6">
+        <p className="text-gray-200 text-2xl font-medium">
           {gameState.status === 'waiting' && 'Place your bet and watch the multiplier climb!'}
           {gameState.status === 'flying' && 'Cash out before the crash!'}
           {gameState.status === 'crashed' && 'Next round starting soon...'}
@@ -169,64 +172,64 @@ export default function AviatorMiniApp() {
       </div>
 
       {/* Game Info */}
-      <div className="bg-slate-800 mx-4 rounded-lg p-6 mb-8">
-        <div className="grid grid-cols-2 gap-4 text-center">
+      <div className="bg-white/10 backdrop-blur-lg mx-4 rounded-2xl p-6 mb-6 border border-white/20">
+        <div className="grid grid-cols-2 gap-6 text-center">
           <div>
-            <div className="text-slate-400">Your Balance</div>
-            <div className="text-2xl font-bold text-green-400">${userBalance}</div>
+            <div className="text-gray-300 text-xl mb-2">Your Balance</div>
+            <div className="text-4xl font-bold text-green-400">${userBalance}</div>
           </div>
           <div>
-            <div className="text-slate-400">Round ID</div>
-            <div className="text-lg">{gameState.roundId.slice(-8)}</div>
+            <div className="text-gray-300 text-xl mb-2">Round ID</div>
+            <div className="text-2xl font-mono">{gameState.roundId.slice(-8)}</div>
           </div>
         </div>
       </div>
 
       {/* Betting Section */}
-      <div className="px-4 mb-8">
-        <div className="bg-slate-800 rounded-lg p-6">
-          <div className="mb-4">
-            <label className="block text-slate-400 mb-2">Bet Amount</label>
+      <div className="px-4 mb-6">
+        <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20">
+          <div className="mb-6">
+            <label className="block text-gray-300 text-2xl mb-3 font-medium">Bet Amount</label>
             <div className="flex items-center space-x-4">
               <input
                 type="number"
                 value={betAmount}
                 onChange={(e) => setBetAmount(Math.max(1, parseInt(e.target.value) || 1))}
-                className="flex-1 bg-slate-700 text-white px-4 py-3 rounded-lg text-lg"
+                className="flex-1 bg-white/20 text-white px-6 py-4 rounded-xl text-2xl font-bold text-center border border-white/30"
                 min="1"
                 max={userBalance}
               />
-              <span className="text-slate-400">$</span>
+              <span className="text-gray-300 text-2xl font-bold">$</span>
             </div>
           </div>
 
           {/* Action Buttons */}
-          <div className="space-y-3">
+          <div className="space-y-4">
             {gameState.status === 'waiting' && (
               <button
                 onClick={placeBet}
                 disabled={betAmount > userBalance}
-                className="w-full bg-green-600 hover:bg-green-700 disabled:bg-slate-600 disabled:cursor-not-allowed text-white font-bold py-4 px-6 rounded-lg text-lg transition-colors"
+                className="w-full bg-green-600 hover:bg-green-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-bold py-6 px-8 rounded-xl text-3xl transition-all duration-300 transform hover:scale-105 disabled:scale-100 shadow-lg"
               >
-                🎮 Place Bet ${betAmount}
+                🎮 PLACE BET ${betAmount}
               </button>
             )}
 
             {gameState.status === 'flying' && (
               <button
                 onClick={cashOut}
-                className="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-4 px-6 rounded-lg text-lg animate-pulse transition-colors"
+                className="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-6 px-8 rounded-xl text-3xl animate-pulse transition-all duration-300 transform hover:scale-105 shadow-lg"
               >
-                💸 Cash Out at {gameState.multiplier.toFixed(2)}x
+                💸 CASH OUT {gameState.multiplier.toFixed(2)}x
               </button>
             )}
 
             {gameState.status === 'crashed' && (
               <button
                 onClick={fetchGameState}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-6 rounded-lg text-lg transition-colors"
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-6 px-8 rounded-xl text-3xl transition-all duration-300 transform hover:scale-105 shadow-lg"
               >
-                🚀 Wait for Next Round
+                🚀 NEXT ROUND
               </button>
             )}
           </div>
@@ -251,9 +254,17 @@ export default function AviatorMiniApp() {
       )}
 
       {/* Footer */}
-      <div className="text-center py-8 text-slate-500">
-        <p>Powered by Farcaster Mini Apps</p>
+      <div className="text-center py-6 text-gray-400">
+        <p className="text-lg">Powered by Farcaster Mini Apps</p>
       </div>
     </div>
+  )
+}
+
+export default function AviatorMiniApp() {
+  return (
+    <MiniAppProvider>
+      <GameScreen />
+    </MiniAppProvider>
   )
 }
