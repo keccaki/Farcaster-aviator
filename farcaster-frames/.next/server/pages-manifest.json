@@ -1,4 +1,8 @@
 {
+  "/api/frames/aviator": "pages/api/frames/aviator.js",
+  "/api/game/state": "pages/api/game/state.js",
+  "/api/game/cashout": "pages/api/game/cashout.js",
+  "/api/game/bet": "pages/api/game/bet.js",
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js"

@@ -1,6 +1,75 @@
 {
   "version": 3,
   "middleware": {},
-  "functions": {},
+  "functions": {
+    "/api/frames/aviator": {
+      "files": [
+        "server/edge-runtime-webpack.js",
+        "server/pages/api/frames/aviator.js"
+      ],
+      "name": "pages/api/frames/aviator",
+      "page": "/api/frames/aviator",
+      "matchers": [
+        {
+          "regexp": "^/api/frames/aviator$",
+          "originalSource": "/api/frames/aviator"
+        }
+      ],
+      "wasm": [],
+      "assets": [],
+      "environments": {}
+    },
+    "/api/game/state": {
+      "files": [
+        "server/edge-runtime-webpack.js",
+        "server/pages/api/game/state.js"
+      ],
+      "name": "pages/api/game/state",
+      "page": "/api/game/state",
+      "matchers": [
+        {
+          "regexp": "^/api/game/state$",
+          "originalSource": "/api/game/state"
+        }
+      ],
+      "wasm": [],
+      "assets": [],
+      "environments": {}
+    },
+    "/api/game/cashout": {
+      "files": [
+        "server/edge-runtime-webpack.js",
+        "server/pages/api/game/cashout.js"
+      ],
+      "name": "pages/api/game/cashout",
+      "page": "/api/game/cashout",
+      "matchers": [
+        {
+          "regexp": "^/api/game/cashout$",
+          "originalSource": "/api/game/cashout"
+        }
+      ],
+      "wasm": [],
+      "assets": [],
+      "environments": {}
+    },
+    "/api/game/bet": {
+      "files": [
+        "server/edge-runtime-webpack.js",
+        "server/pages/api/game/bet.js"
+      ],
+      "name": "pages/api/game/bet",
+      "page": "/api/game/bet",
+      "matchers": [
+        {
+          "regexp": "^/api/game/bet$",
+          "originalSource": "/api/game/bet"
+        }
+      ],
+      "wasm": [],
+      "assets": [],
+      "environments": {}
+    }
+  },
   "sortedMiddleware": []
 }

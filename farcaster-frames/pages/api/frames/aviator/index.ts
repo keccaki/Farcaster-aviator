@@ -15,10 +15,11 @@ interface GameState {
   currentBets?: any[]
 }
 
-// Fetch game state from Laravel backend
+// Fetch game state from local API
 async function fetchGameState(): Promise<GameState> {
   try {
-    const response = await fetch(`${process.env.LARAVEL_API_URL}/farcaster/game-state`, {
+    const baseUrl = process.env.NEXT_PUBLIC_FRAME_BASE_URL || 'https://farcaster-aviator.vercel.app'
+    const response = await fetch(`${baseUrl}/api/game/state`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -26,7 +27,8 @@ async function fetchGameState(): Promise<GameState> {
     })
     
     if (response.ok) {
-      const data = await response.json()
+      const result = await response.json()
+      const data = result.data
       return {
         status: data.status || 'waiting',
         multiplier: data.multiplier || 1.0,
@@ -139,7 +141,8 @@ async function handlePOST(req: any, res: any) {
         if (gameState.status === 'waiting') {
           // Try to place a bet
           try {
-            const betResponse = await fetch(`${process.env.LARAVEL_API_URL}/farcaster/bet`, {
+            const baseUrl = process.env.NEXT_PUBLIC_FRAME_BASE_URL || 'https://farcaster-aviator.vercel.app'
+            const betResponse = await fetch(`${baseUrl}/api/game/bet`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
@@ -154,6 +157,7 @@ async function handlePOST(req: any, res: any) {
             
             if (betResponse.ok) {
               const betData = await betResponse.json()
+              console.log('Bet placed successfully:', betData)
               // Update game state after placing bet
               newGameState = await fetchGameState()
             }
@@ -163,17 +167,23 @@ async function handlePOST(req: any, res: any) {
         } else if (gameState.status === 'flying') {
           // Try to cash out
           try {
-            await fetch(`${process.env.LARAVEL_API_URL}/farcaster/cashout`, {
+            const baseUrl = process.env.NEXT_PUBLIC_FRAME_BASE_URL || 'https://farcaster-aviator.vercel.app'
+            const cashoutResponse = await fetch(`${baseUrl}/api/game/cashout`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
               },
               body: JSON.stringify({
                 fid: userFid,
-                betId: 'current', // Will need to track bet ID properly
+                betId: `bet_${userFid}_${gameState.roundId}`, // Generate consistent bet ID
                 multiplier: gameState.multiplier
               })
             })
+            
+            if (cashoutResponse.ok) {
+              const cashoutData = await cashoutResponse.json()
+              console.log('Cash out successful:', cashoutData)
+            }
             newGameState = await fetchGameState()
           } catch (error) {
             console.log('Failed to cash out:', error)
