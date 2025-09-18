@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aviator Frame Tester</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .test-section { border: 1px solid #ccc; margin: 20px 0; padding: 15px; border-radius: 8px; }
+        button { background: #8b5cf6; color: white; border: none; padding: 10px 20px; border-radius: 5px; margin: 5px; cursor: pointer; }
+        input { padding: 8px; margin: 5px; border: 1px solid #ccc; border-radius: 4px; }
+        .result { background: #f5f5f5; padding: 10px; margin: 10px 0; border-radius: 4px; }
+        iframe { width: 100%; height: 400px; border: 1px solid #ccc; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <h1>🚀 Aviator Farcaster Frame Tester</h1>
+    
+    <div class="test-section">
+        <h3>📝 Setup Checklist</h3>
+        <ul>
+            <li>✅ Frame endpoints deployed to public URL</li>
+            <li>✅ Laravel backend accessible</li>
+            <li>🔲 Farcaster account for testing</li>
+            <li>🔲 Frame validator configured</li>
+        </ul>
+    </div>
+
+    <div class="test-section">
+        <h3>🔗 Frame URL Tester</h3>
+        <input type="text" id="frameUrl" placeholder="https://your-frames.vercel.app/api/frames/aviator" style="width: 400px;">
+        <button onclick="testFrameUrl()">Test Frame</button>
+        <div id="frameResult" class="result" style="display: none;"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>🎮 Live Frame Preview</h3>
+        <button onclick="loadMainFrame()">Load Main Game</button>
+        <button onclick="loadBettingFrame()">Load Betting</button>
+        <button onclick="loadLeaderboard()">Load Leaderboard</button>
+        <iframe id="framePreview" src="about:blank"></iframe>
+    </div>
+
+    <div class="test-section">
+        <h3>🧪 API Endpoint Tests</h3>
+        <button onclick="testLaravelAPI()">Test Laravel API</button>
+        <button onclick="testFarcasterAuth()">Test Auth</button>
+        <button onclick="testWalletAPI()">Test Wallet</button>
+        <div id="apiResults" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>📱 Farcaster Testing Links</h3>
+        <p><strong>Warpcast Frame Validator:</strong></p>
+        <input type="text" id="validatorUrl" placeholder="Paste your frame URL here" style="width: 400px;">
+        <button onclick="openValidator()">Open in Warpcast Validator</button>
+        
+        <p><strong>Frame Debugger:</strong></p>
+        <button onclick="openFrameDebugger()">Open Frame Debugger</button>
+    </div>
+
+    <script>
+        // Configuration - Update these URLs
+        const CONFIG = {
+            frameBaseUrl: 'http://localhost:3000', // Your local frames
+            laravelUrl: 'http://localhost:8000', // Your local Laravel
+            testFrameUrl: 'http://localhost:3000/api/test-frame' // Working test frame
+        };
+
+        async function testFrameUrl() {
+            const url = document.getElementById('frameUrl').value || `${CONFIG.frameBaseUrl}/api/frames/aviator`;
+            const resultDiv = document.getElementById('frameResult');
+            
+            try {
+                const response = await fetch(url, { method: 'POST', body: '{}' });
+                const html = await response.text();
+                
+                resultDiv.innerHTML = `
+                    <strong>Status:</strong> ${response.status} ${response.ok ? '✅' : '❌'}<br>
+                    <strong>Content Type:</strong> ${response.headers.get('content-type')}<br>
+                    <strong>Has Frame Meta:</strong> ${html.includes('fc:frame') ? '✅' : '❌'}<br>
+                    <strong>Response Length:</strong> ${html.length} chars
+                `;
+                resultDiv.style.display = 'block';
+            } catch (error) {
+                resultDiv.innerHTML = `<strong>Error:</strong> ${error.message} ❌`;
+                resultDiv.style.display = 'block';
+            }
+        }
+
+        function loadMainFrame() {
+            document.getElementById('framePreview').src = `${CONFIG.frameBaseUrl}/api/frames/aviator`;
+        }
+
+        function loadBettingFrame() {
+            document.getElementById('framePreview').src = `${CONFIG.frameBaseUrl}/api/frames/aviator/betting`;
+        }
+
+        function loadLeaderboard() {
+            document.getElementById('framePreview').src = `${CONFIG.frameBaseUrl}/api/frames/aviator/social`;
+        }
+
+        async function testLaravelAPI() {
+            const resultDiv = document.getElementById('apiResults');
+            
+            try {
+                // Test basic health
+                const response = await fetch(`${CONFIG.laravelUrl}/api/farcaster/leaderboard`);
+                const data = await response.json();
+                
+                resultDiv.innerHTML = `
+                    <strong>Laravel API:</strong> ${response.ok ? '✅ Working' : '❌ Failed'}<br>
+                    <strong>Response:</strong> ${JSON.stringify(data, null, 2)}
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `<strong>Laravel API Error:</strong> ${error.message} ❌`;
+            }
+        }
+
+        async function testFarcasterAuth() {
+            const resultDiv = document.getElementById('apiResults');
+            
+            try {
+                const response = await fetch(`${CONFIG.laravelUrl}/auth/farcaster`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        fid: 12345,
+                        username: 'tester',
+                        displayName: 'Test User'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                resultDiv.innerHTML = `
+                    <strong>Farcaster Auth:</strong> ${response.ok ? '✅ Working' : '❌ Failed'}<br>
+                    <strong>Response:</strong> ${JSON.stringify(data, null, 2)}
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `<strong>Auth Error:</strong> ${error.message} ❌`;
+            }
+        }
+
+        async function testWalletAPI() {
+            const resultDiv = document.getElementById('apiResults');
+            
+            try {
+                const response = await fetch(`${CONFIG.laravelUrl}/api/farcaster/wallet/12345`);
+                const data = await response.json();
+                
+                resultDiv.innerHTML = `
+                    <strong>Wallet API:</strong> ${response.ok ? '✅ Working' : '❌ Failed'}<br>
+                    <strong>Response:</strong> ${JSON.stringify(data, null, 2)}
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `<strong>Wallet Error:</strong> ${error.message} ❌`;
+            }
+        }
+
+        function openValidator() {
+            const url = document.getElementById('validatorUrl').value || `${CONFIG.frameBaseUrl}/api/frames/aviator`;
+            window.open(`https://warpcast.com/~/developers/frames?url=${encodeURIComponent(url)}`, '_blank');
+        }
+
+        function openFrameDebugger() {
+            window.open('https://debugger.framesjs.org', '_blank');
+        }
+
+        // Auto-populate URLs if config is set
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('frameUrl').value = `${CONFIG.frameBaseUrl}/api/frames/aviator`;
+            document.getElementById('validatorUrl').value = `${CONFIG.frameBaseUrl}/api/frames/aviator`;
+        });
+    </script>
+</body>
+</html>

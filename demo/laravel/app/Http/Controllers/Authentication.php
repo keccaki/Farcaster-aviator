@@ -141,6 +141,93 @@ class Authentication extends Controller
     }
 
     /**
+     * Farcaster authentication - login/register Farcaster users
+     * 
+     * @param Request $r
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function farcasterLogin(Request $r)
+    {
+        $validated = $r->validate([
+            'fid' => 'required|integer',
+            'username' => 'required|string',
+            'displayName' => 'string|nullable',
+        ]);
+
+        $fid = $r->fid;
+        $username = $r->username;
+        $displayName = $r->displayName ?? $username;
+
+        try {
+            // Check if Farcaster user already exists
+            $user = User::where('farcaster_id', $fid)->first();
+            
+            if (!$user) {
+                // Create new user for Farcaster
+                $user = new User;
+                $user->name = $displayName;
+                $user->farcaster_id = $fid;
+                $user->farcaster_username = $username;
+                $user->email = $fid . '@farcaster.local'; // Placeholder email
+                $user->password = Hash::make(Str::random(32)); // Random password
+                $user->currency = '$';
+                $user->gender = 'other'; // Default
+                $user->country = 'FC'; // Farcaster
+                $user->status = '1';
+                $user->image = "/images/avtar/av-".rand(1,72).".png";
+                
+                if ($user->save()) {
+                    // Create wallet for new user using existing system
+                    $wallet = new Wallet;
+                    $wallet->userid = $user->id;
+                    $wallet->amount = setting('initial_bonus') ?? 25.0; // $25 welcome bonus
+                    $wallet->save();
+
+                    // Log registration
+                    Log::info('New Farcaster user registered', [
+                        'fid' => $fid,
+                        'username' => $username,
+                        'user_id' => $user->id
+                    ]);
+                }
+            } else {
+                // Update existing user's Farcaster info if changed
+                if ($user->farcaster_username !== $username || $user->name !== $displayName) {
+                    $user->farcaster_username = $username;
+                    $user->name = $displayName;
+                    $user->save();
+                }
+            }
+
+            // Set session using existing login system
+            $r->session()->put('userlogin', $user);
+
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'user_id' => $user->id,
+                    'username' => $user->name,
+                    'farcaster_id' => $user->farcaster_id,
+                    'balance' => Wallet::where('userid', $user->id)->first()->amount ?? 0,
+                    'is_new_user' => !User::where('farcaster_id', $fid)->exists()
+                ],
+                'message' => 'Farcaster authentication successful'
+            ]);
+
+        } catch (Exception $e) {
+            Log::error('Farcaster authentication failed', [
+                'fid' => $fid,
+                'error' => $e->getMessage()
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'error' => 'Authentication failed'
+            ], 500);
+        }
+    }
+
+    /**
      * Send magic login link via email
      * 
      * @param Request $r

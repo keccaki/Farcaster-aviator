@@ -55,6 +55,14 @@ Route::get('/auth/magic-link/status', [Authentication::class, "checkMagicLinkSta
 // Auth Admin Login
 Route::post('/auth/admin/login', [Authentication::class, "adminlogin"]);
 
+// Farcaster Authentication
+Route::post('/auth/farcaster', [Authentication::class, "farcasterLogin"]);
+
+// Farcaster Mini App
+Route::get('/farcaster-app', function () {
+    return view('farcaster-app');
+});
+
 // Admin Login
 Route::get('/admin', [Admin::class, "login"]);
 Route::group(['prefix' => 'admin/', 'middleware' => ['isAdmin']], function () {

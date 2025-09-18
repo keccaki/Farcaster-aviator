@@ -1,0 +1,24 @@
+{
+  "version": 3,
+  "middleware": {},
+  "functions": {
+    "/api/frames/aviator": {
+      "files": [
+        "server/edge-runtime-webpack.js",
+        "server/pages/api/frames/aviator.js"
+      ],
+      "name": "pages/api/frames/aviator",
+      "page": "/api/frames/aviator",
+      "matchers": [
+        {
+          "regexp": "^/api/frames/aviator$",
+          "originalSource": "/api/frames/aviator"
+        }
+      ],
+      "wasm": [],
+      "assets": [],
+      "environments": {}
+    }
+  },
+  "sortedMiddleware": []
+}
