@@ -11,5 +11,14 @@
     "splashImageUrl": "https://farcaster-aviator.vercel.app/splash.svg", 
     "splashBackgroundColor": "#1a1a2e",
     "homeUrl": "https://farcaster-aviator.vercel.app/api/frames/aviator"
+  },
+  "miniApp": {
+    "name": "Aviator Crash Game",
+    "description": "Play the thrilling Aviator crash game directly in Farcaster",
+    "icon": "https://farcaster-aviator.vercel.app/icon.svg",
+    "splashImage": "https://farcaster-aviator.vercel.app/splash.svg",
+    "url": "https://farcaster-aviator.vercel.app",
+    "backgroundColor": "#1a1a2e",
+    "theme": "dark"
   }
 }
