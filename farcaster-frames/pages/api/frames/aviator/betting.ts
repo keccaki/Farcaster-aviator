@@ -2,9 +2,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getFrameHtmlResponse } from '@coinbase/onchainkit/frame'
 
-export const config = {
-  runtime: 'edge'
-}
+// Removed edge runtime for Vercel compatibility
 
 export default async function handler(req: any, res: any) {
   const frameHtml = getFrameHtmlResponse({

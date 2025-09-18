@@ -2,9 +2,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { FrameRequest, getFrameMessage, getFrameHtmlResponse } from '@coinbase/onchainkit/frame'
 
-export const config = {
-  runtime: 'edge'
-}
+// Removed edge runtime for Vercel compatibility
 
 // Game state interface
 interface GameState {
