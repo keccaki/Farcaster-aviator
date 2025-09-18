@@ -1,0 +1,15 @@
+{
+  "accountAssociation": {
+    "header": "eyJmaWQiOjEsInR5cGUiOiJjdXN0b2R5IiwiYWxnIjoiRVMyNTYifQ",
+    "payload": "eyJkb21haW4iOiJmYXJjYXN0ZXItYXZpYXRvci52ZXJjZWwuYXBwIn0",
+    "signature": "MHhkYWQzZGY0NjNhM2E0NjA4ODJkZmY0MWRlMjY0Yjg3NDM2M2ZmNjJkYWI5MWEyNjc0OTc3ZTMyZGY4MzgzMDU3"
+  },
+  "frame": {
+    "name": "Aviator Crash Game",
+    "version": "0.0.1",
+    "iconUrl": "https://farcaster-aviator.vercel.app/icon.svg",
+    "splashImageUrl": "https://farcaster-aviator.vercel.app/splash.svg", 
+    "splashBackgroundColor": "#1a1a2e",
+    "homeUrl": "https://farcaster-aviator.vercel.app/api/frames/aviator"
+  }
+}

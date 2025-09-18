@@ -1,0 +1,33 @@
+<svg width="400" height="400" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a2e"/>
+      <stop offset="100%" style="stop-color:#16213e"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="400" fill="url(#bg)"/>
+  
+  <!-- Title -->
+  <text x="200" y="120" text-anchor="middle" font-family="Arial, sans-serif" 
+        font-size="32" font-weight="bold" fill="#ffffff">
+    🚀 AVIATOR CRASH GAME
+  </text>
+  
+  <!-- Status -->
+  <text x="200" y="180" text-anchor="middle" font-family="Arial, sans-serif" 
+        font-size="48" fill="#00ff88">
+    Ready to Fly!
+  </text>
+  
+  <!-- Instructions -->
+  <text x="200" y="280" text-anchor="middle" font-family="Arial, sans-serif" 
+        font-size="16" fill="#cccccc">
+    Click Play to start betting on the multiplier!
+  </text>
+  
+  <!-- Footer -->
+  <text x="200" y="360" text-anchor="middle" font-family="Arial, sans-serif" 
+        font-size="12" fill="#888888">
+    Powered by Farcaster Frames
+  </text>
+</svg>
