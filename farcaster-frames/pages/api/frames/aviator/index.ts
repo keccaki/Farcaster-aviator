@@ -202,21 +202,15 @@ async function handlePOST(req: any, res: any) {
     
     // Determine button configuration based on new game state
     const buttons = newGameState.status === 'waiting' ? [
-      { label: '💰 Bet $10' },
-      { label: '🎯 Play Full Game' },
-      { label: '📊 Stats' }
+      { label: '💰 Bet $10' }
     ] : newGameState.status === 'flying' ? [
-      { label: '💸 Cash Out Now!' },
-      { label: '🎮 Full Game' },
-      { label: '📈 Leaderboard' }
+      { label: '💸 Cash Out Now!' }
     ] : [
-      { label: '🚀 New Round' },
-      { label: '🎮 Play More' },
-      { label: '🏆 Results' }
+      { label: '🚀 New Round' }
     ]
 
     const frameHtml = getFrameHtmlResponse({
-      buttons,
+      buttons: buttons as any, // Cast to fix type issue
       image: {
         src: generateGameImage(newGameState)
       },
@@ -240,18 +234,15 @@ async function handleGET(req: any, res: any) {
     
     // Determine buttons based on game state
     const buttons = gameState.status === 'waiting' ? [
-      { label: '🎮 Play Game' },
-      { label: '💰 Place Bet' }
+      { label: '🎮 Play Game' }
     ] : gameState.status === 'flying' ? [
-      { label: '💸 Cash Out!' },
-      { label: '🎮 Full Game' }
+      { label: '💸 Cash Out!' }
     ] : [
-      { label: '🚀 New Round' },
-      { label: '🎮 Play Again' }
+      { label: '🚀 New Round' }
     ]
 
     const frameHtml = getFrameHtmlResponse({
-      buttons,
+      buttons: buttons as any, // Cast to fix type issue
       image: {
         src: generateGameImage(gameState)
       },
@@ -266,9 +257,8 @@ async function handleGET(req: any, res: any) {
     // Fallback frame
     const frameHtml = getFrameHtmlResponse({
       buttons: [
-        { label: '🎮 Play Game' },
-        { label: '💰 Place Bet' }
-      ],
+        { label: '🎮 Play Game' }
+      ] as any,
       image: {
         src: generateGameImage({
           status: 'waiting',

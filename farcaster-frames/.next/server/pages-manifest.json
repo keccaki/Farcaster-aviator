@@ -1,5 +1,13 @@
 {
   "/_app": "pages/_app.js",
+  "/api/test-frame": "pages/api/test-frame.js",
+  "/": "pages/index.js",
   "/_error": "pages/_error.js",
-  "/_document": "pages/_document.js"
+  "/_document": "pages/_document.js",
+  "/api/frames/aviator/betting": "pages/api/frames/aviator/betting.js",
+  "/api/game/bet": "pages/api/game/bet.js",
+  "/api/frames/aviator": "pages/api/frames/aviator.js",
+  "/api/frames/aviator/social": "pages/api/frames/aviator/social.js",
+  "/api/game/state": "pages/api/game/state.js",
+  "/api/game/cashout": "pages/api/game/cashout.js"
 }

@@ -1,6 +1,148 @@
 {
   "version": 3,
   "middleware": {},
-  "functions": {},
+  "functions": {
+    "/api/frames/aviator/betting": {
+      "files": [
+        "prerender-manifest.js",
+        "server/edge-runtime-webpack.js",
+        "server/edge-chunks/730.js",
+        "server/edge-chunks/45.js",
+        "server/pages/api/frames/aviator/betting.js"
+      ],
+      "name": "pages/api/frames/aviator/betting",
+      "page": "/api/frames/aviator/betting",
+      "matchers": [
+        {
+          "regexp": "^/api/frames/aviator/betting$",
+          "originalSource": "/api/frames/aviator/betting"
+        }
+      ],
+      "wasm": [],
+      "assets": [],
+      "environments": {
+        "previewModeId": "f8f5626cce916d956efa2569e01b93b6",
+        "previewModeSigningKey": "b6f407b6bd56a0b7d64e1757178819dc598f009dbc14bb1fbd1e43e12549b416",
+        "previewModeEncryptionKey": "104d690df2a913051027c4e5d2376d066792405e644964f191fc81074a272e24"
+      }
+    },
+    "/api/game/bet": {
+      "files": [
+        "prerender-manifest.js",
+        "server/edge-runtime-webpack.js",
+        "server/edge-chunks/730.js",
+        "server/pages/api/game/bet.js"
+      ],
+      "name": "pages/api/game/bet",
+      "page": "/api/game/bet",
+      "matchers": [
+        {
+          "regexp": "^/api/game/bet$",
+          "originalSource": "/api/game/bet"
+        }
+      ],
+      "wasm": [],
+      "assets": [],
+      "environments": {
+        "previewModeId": "f8f5626cce916d956efa2569e01b93b6",
+        "previewModeSigningKey": "b6f407b6bd56a0b7d64e1757178819dc598f009dbc14bb1fbd1e43e12549b416",
+        "previewModeEncryptionKey": "104d690df2a913051027c4e5d2376d066792405e644964f191fc81074a272e24"
+      }
+    },
+    "/api/frames/aviator": {
+      "files": [
+        "prerender-manifest.js",
+        "server/edge-runtime-webpack.js",
+        "server/edge-chunks/730.js",
+        "server/edge-chunks/45.js",
+        "server/pages/api/frames/aviator.js"
+      ],
+      "name": "pages/api/frames/aviator",
+      "page": "/api/frames/aviator",
+      "matchers": [
+        {
+          "regexp": "^/api/frames/aviator$",
+          "originalSource": "/api/frames/aviator"
+        }
+      ],
+      "wasm": [],
+      "assets": [],
+      "environments": {
+        "previewModeId": "f8f5626cce916d956efa2569e01b93b6",
+        "previewModeSigningKey": "b6f407b6bd56a0b7d64e1757178819dc598f009dbc14bb1fbd1e43e12549b416",
+        "previewModeEncryptionKey": "104d690df2a913051027c4e5d2376d066792405e644964f191fc81074a272e24"
+      }
+    },
+    "/api/frames/aviator/social": {
+      "files": [
+        "prerender-manifest.js",
+        "server/edge-runtime-webpack.js",
+        "server/edge-chunks/730.js",
+        "server/edge-chunks/45.js",
+        "server/pages/api/frames/aviator/social.js"
+      ],
+      "name": "pages/api/frames/aviator/social",
+      "page": "/api/frames/aviator/social",
+      "matchers": [
+        {
+          "regexp": "^/api/frames/aviator/social$",
+          "originalSource": "/api/frames/aviator/social"
+        }
+      ],
+      "wasm": [],
+      "assets": [],
+      "environments": {
+        "previewModeId": "f8f5626cce916d956efa2569e01b93b6",
+        "previewModeSigningKey": "b6f407b6bd56a0b7d64e1757178819dc598f009dbc14bb1fbd1e43e12549b416",
+        "previewModeEncryptionKey": "104d690df2a913051027c4e5d2376d066792405e644964f191fc81074a272e24"
+      }
+    },
+    "/api/game/state": {
+      "files": [
+        "prerender-manifest.js",
+        "server/edge-runtime-webpack.js",
+        "server/edge-chunks/730.js",
+        "server/pages/api/game/state.js"
+      ],
+      "name": "pages/api/game/state",
+      "page": "/api/game/state",
+      "matchers": [
+        {
+          "regexp": "^/api/game/state$",
+          "originalSource": "/api/game/state"
+        }
+      ],
+      "wasm": [],
+      "assets": [],
+      "environments": {
+        "previewModeId": "f8f5626cce916d956efa2569e01b93b6",
+        "previewModeSigningKey": "b6f407b6bd56a0b7d64e1757178819dc598f009dbc14bb1fbd1e43e12549b416",
+        "previewModeEncryptionKey": "104d690df2a913051027c4e5d2376d066792405e644964f191fc81074a272e24"
+      }
+    },
+    "/api/game/cashout": {
+      "files": [
+        "prerender-manifest.js",
+        "server/edge-runtime-webpack.js",
+        "server/edge-chunks/730.js",
+        "server/pages/api/game/cashout.js"
+      ],
+      "name": "pages/api/game/cashout",
+      "page": "/api/game/cashout",
+      "matchers": [
+        {
+          "regexp": "^/api/game/cashout$",
+          "originalSource": "/api/game/cashout"
+        }
+      ],
+      "wasm": [],
+      "assets": [],
+      "environments": {
+        "previewModeId": "f8f5626cce916d956efa2569e01b93b6",
+        "previewModeSigningKey": "b6f407b6bd56a0b7d64e1757178819dc598f009dbc14bb1fbd1e43e12549b416",
+        "previewModeEncryptionKey": "104d690df2a913051027c4e5d2376d066792405e644964f191fc81074a272e24"
+      }
+    }
+  },
   "sortedMiddleware": []
 }
