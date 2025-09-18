@@ -1,8 +1,8 @@
 {
   "accountAssociation": {
-    "header": "eyJmaWQiOjEsInR5cGUiOiJjdXN0b2R5IiwiYWxnIjoiRVMyNTYifQ",
+    "header": "eyJmaWQiOjEzMzc3NTQsInR5cGUiOiJjdXN0b2R5Iiwia2V5IjoiMHhjQjYzZDU5OWM3Njc5NDNBODM1N2ViMDI2Q0QyYTVlQTJBNzE5ZjY0In0",
     "payload": "eyJkb21haW4iOiJmYXJjYXN0ZXItYXZpYXRvci52ZXJjZWwuYXBwIn0",
-    "signature": "MHhkYWQzZGY0NjNhM2E0NjA4ODJkZmY0MWRlMjY0Yjg3NDM2M2ZmNjJkYWI5MWEyNjc0OTc3ZTMyZGY4MzgzMDU3"
+    "signature": "MHhkMzc3YTVkYjBhNzNiOTBiNzkwNDI5MDFmZjY2NDA4ZmU1YTg0NTAwNTZlZTUyMzQ4NzA4Zjk1NDNjNWJiZWI3MjIyMTNjNjRjOTE1ZDlmMDNhZTRkMzlhZWRhOWU2NWE3MTAyN2I0NTkyNDBiNTBiNzU3OWRlOTQ3MzU1NzEwZTFi"
   },
   "frame": {
     "name": "Aviator Crash Game",
