@@ -15,23 +15,42 @@ const GameScreen = () => {
   useEffect(() => {
     const initializeApp = async () => {
       try {
-        // For now, simulate the SDK ready call
-        // In production, this would be replaced with actual SDK
         console.log('Mini App initializing...')
         
-        // Simulate calling sdk.actions.ready()
+        // Wait for SDK to load
+        let attempts = 0
+        while (attempts < 10 && typeof window !== 'undefined' && !(window as any).farcasterSDK) {
+          await new Promise(resolve => setTimeout(resolve, 500))
+          attempts++
+        }
+        
+        // Call sdk.actions.ready() if available
         if (typeof window !== 'undefined' && (window as any).farcasterSDK) {
-          await (window as any).farcasterSDK.actions.ready()
+          console.log('Calling sdk.actions.ready()...')
+          try {
+            await (window as any).farcasterSDK.actions.ready()
+            console.log('✅ SDK ready() called successfully!')
+          } catch (sdkError) {
+            console.warn('SDK ready() failed, but continuing:', sdkError)
+          }
+        } else {
+          console.warn('Farcaster SDK not available, simulating ready() call')
+          // Simulate the ready call for testing
+          await new Promise(resolve => setTimeout(resolve, 1000))
         }
         
         // Fetch initial game state
         await fetchGameState()
         
-        console.log('Mini App initialized successfully!')
+        console.log('✅ Mini App initialized successfully!')
       } catch (error) {
         console.error('Failed to initialize Mini App:', error)
         // Still fetch game state even if SDK fails
-        await fetchGameState()
+        try {
+          await fetchGameState()
+        } catch (fetchError) {
+          console.error('Failed to fetch game state:', fetchError)
+        }
       }
     }
 

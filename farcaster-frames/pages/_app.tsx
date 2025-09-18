@@ -21,12 +21,13 @@ export default function App({ Component, pageProps }: AppProps) {
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
         
         {/* Farcaster Mini App SDK - CDN approach as per docs */}
-        <script type="module">
-          {`
+        <script type="module" dangerouslySetInnerHTML={{
+          __html: `
             import { sdk } from 'https://esm.sh/@farcaster/miniapp-sdk'
             window.farcasterSDK = sdk
-          `}
-        </script>
+            console.log('Farcaster SDK loaded:', sdk)
+          `
+        }} />
       </Head>
       <Component {...pageProps} />
     </>
