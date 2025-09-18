@@ -10,6 +10,7 @@ const GameScreen = () => {
   })
   const [userBalance, setUserBalance] = useState(1000)
   const [betAmount, setBetAmount] = useState(10)
+  const [sdkReady, setSdkReady] = useState(false)
 
   // Initialize Mini App
   useEffect(() => {
@@ -17,29 +18,7 @@ const GameScreen = () => {
       try {
         console.log('Mini App initializing...')
         
-        // Wait for SDK to load
-        let attempts = 0
-        while (attempts < 10 && typeof window !== 'undefined' && !(window as any).farcasterSDK) {
-          await new Promise(resolve => setTimeout(resolve, 500))
-          attempts++
-        }
-        
-        // Call sdk.actions.ready() if available
-        if (typeof window !== 'undefined' && (window as any).farcasterSDK) {
-          console.log('Calling sdk.actions.ready()...')
-          try {
-            await (window as any).farcasterSDK.actions.ready()
-            console.log('✅ SDK ready() called successfully!')
-          } catch (sdkError) {
-            console.warn('SDK ready() failed, but continuing:', sdkError)
-          }
-        } else {
-          console.warn('Farcaster SDK not available, simulating ready() call')
-          // Simulate the ready call for testing
-          await new Promise(resolve => setTimeout(resolve, 1000))
-        }
-        
-        // Fetch initial game state
+        // Fetch initial game state first
         await fetchGameState()
         
         console.log('✅ Mini App initialized successfully!')
@@ -51,6 +30,53 @@ const GameScreen = () => {
         } catch (fetchError) {
           console.error('Failed to fetch game state:', fetchError)
         }
+      }
+    }
+
+    // Handle SDK ready event
+    const handleSDKReady = async (event: any) => {
+      console.log('SDK Ready event received:', event.detail)
+      try {
+        const sdk = event.detail
+        if (sdk && sdk.actions && sdk.actions.ready) {
+          console.log('Calling sdk.actions.ready()...')
+          await sdk.actions.ready()
+          console.log('✅ SDK ready() called successfully!')
+          setSdkReady(true)
+        } else {
+          console.warn('SDK actions not available')
+          setSdkReady(true) // Allow app to work
+        }
+      } catch (error) {
+        console.error('SDK ready() failed:', error)
+        setSdkReady(true) // Allow app to work even if SDK fails
+      }
+    }
+
+    // Listen for SDK ready event
+    if (typeof window !== 'undefined') {
+      window.addEventListener('farcasterSDKReady', handleSDKReady)
+      
+      // Also check if SDK is already available
+      if ((window as any).farcasterSDK) {
+        handleSDKReady({ detail: (window as any).farcasterSDK })
+      }
+      
+      // Fallback: try to call ready() after 3 seconds if SDK is available
+      const fallbackTimeout = setTimeout(() => {
+        if (!sdkReady && (window as any).farcasterSDK) {
+          console.log('Fallback: Attempting to call SDK ready()...')
+          handleSDKReady({ detail: (window as any).farcasterSDK })
+        } else if (!sdkReady) {
+          console.log('Fallback: No SDK available, allowing app to work anyway')
+          setSdkReady(true)
+        }
+      }, 3000)
+      
+      // Cleanup timeout
+      return () => {
+        clearTimeout(fallbackTimeout)
+        window.removeEventListener('farcasterSDKReady', handleSDKReady)
       }
     }
 
