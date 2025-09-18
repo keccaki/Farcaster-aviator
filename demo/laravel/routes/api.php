@@ -82,6 +82,7 @@ Route::prefix('farcaster')->group(function () {
     Route::post('/withdraw', [CryptoController::class, 'withdraw']); // Reuse existing withdrawal
     
     // Game interactions
+    Route::get('/game-state', [FarcasterController::class, 'getCurrentGameState']);
     Route::post('/bet', [FarcasterController::class, 'placeBet']);
     Route::post('/cashout', [FarcasterController::class, 'cashOut']);
     Route::get('/history/{fid}', [FarcasterController::class, 'getGameHistory']);

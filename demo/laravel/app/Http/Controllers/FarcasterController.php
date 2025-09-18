@@ -339,6 +339,77 @@ class FarcasterController extends Controller
     }
 
     /**
+     * Get current game state for Farcaster frames
+     */
+    public function getCurrentGameState(Request $request)
+    {
+        try {
+            // Get current game ID using existing system
+            $currentGameId = currentid();
+            
+            // Check if there's an active game round
+            $gameStatus = 'waiting'; // default state
+            $multiplier = 1.0;
+            $timeRemaining = null;
+            
+            // Use existing game logic to determine state
+            // This integrates with your existing Aviator game system
+            if (function_exists('getGameStatus')) {
+                $status = getGameStatus();
+                $gameStatus = $status['status'] ?? 'waiting';
+                $multiplier = $status['multiplier'] ?? 1.0;
+                $timeRemaining = $status['time_remaining'] ?? null;
+            }
+            
+            // Get current active bets for this round
+            $currentBets = Userbit::where('gameid', $currentGameId)
+                ->where('status', 'active')
+                ->with('user')
+                ->get()
+                ->map(function($bet) {
+                    return [
+                        'user_id' => $bet->userid,
+                        'username' => $bet->user->name ?? 'Anonymous',
+                        'amount' => (float) $bet->amount,
+                        'auto_cashout' => $bet->auto_cashout
+                    ];
+                });
+
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'status' => $gameStatus,
+                    'multiplier' => (float) $multiplier,
+                    'round_id' => $currentGameId,
+                    'time_remaining' => $timeRemaining,
+                    'current_bets' => $currentBets,
+                    'total_bets' => $currentBets->count(),
+                    'total_bet_amount' => $currentBets->sum('amount')
+                ],
+                'timestamp' => now()->toISOString()
+            ]);
+
+        } catch (Exception $e) {
+            Log::error('Get current game state failed', [
+                'error' => $e->getMessage()
+            ]);
+
+            return response()->json([
+                'success' => true, // Don't fail the frame, provide fallback
+                'data' => [
+                    'status' => 'waiting',
+                    'multiplier' => 1.0,
+                    'round_id' => time(),
+                    'current_bets' => [],
+                    'total_bets' => 0,
+                    'total_bet_amount' => 0
+                ],
+                'timestamp' => now()->toISOString()
+            ]);
+        }
+    }
+
+    /**
      * Get user game history
      */
     public function getGameHistory($fid, Request $request)
