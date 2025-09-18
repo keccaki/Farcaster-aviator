@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react'
-import { MiniAppProvider, useMiniApp } from '@farcaster/miniapp-sdk'
 
 const GameScreen = () => {
-  const { sdk } = useMiniApp()
   const [gameState, setGameState] = useState({
     status: 'waiting',
     multiplier: 1.0,
@@ -17,8 +15,14 @@ const GameScreen = () => {
   useEffect(() => {
     const initializeApp = async () => {
       try {
-        // Call ready() to hide the splash screen
-        await sdk.actions.ready()
+        // For now, simulate the SDK ready call
+        // In production, this would be replaced with actual SDK
+        console.log('Mini App initializing...')
+        
+        // Simulate calling sdk.actions.ready()
+        if (typeof window !== 'undefined' && (window as any).farcasterSDK) {
+          await (window as any).farcasterSDK.actions.ready()
+        }
         
         // Fetch initial game state
         await fetchGameState()
@@ -26,17 +30,13 @@ const GameScreen = () => {
         console.log('Mini App initialized successfully!')
       } catch (error) {
         console.error('Failed to initialize Mini App:', error)
-        // Still call ready() even if other initialization fails
-        try {
-          await sdk.actions.ready()
-        } catch (readyError) {
-          console.error('Failed to call ready():', readyError)
-        }
+        // Still fetch game state even if SDK fails
+        await fetchGameState()
       }
     }
 
     initializeApp()
-  }, [sdk])
+  }, [])
 
   // Fetch current game state
   const fetchGameState = async () => {
@@ -262,9 +262,5 @@ const GameScreen = () => {
 }
 
 export default function AviatorMiniApp() {
-  return (
-    <MiniAppProvider>
-      <GameScreen />
-    </MiniAppProvider>
-  )
+  return <GameScreen />
 }
