@@ -1,3 +1,5 @@
+'use client';
+
 import { useEffect, useState } from 'react'
 import { useNeynarContext } from '@neynar/react'
 import { useMiniAppReady } from '../hooks/useMiniAppReady'

@@ -1,1 +1,1 @@
-self.__REACT_LOADABLE_MANIFEST="{}"
+self.__REACT_LOADABLE_MANIFEST='{"hooks/useMiniAppReady.ts -> @farcaster/miniapp-sdk":{"id":557,"files":["static/chunks/8015bd09.2f6c7262b37eeaff.js","static/chunks/931.b2d357720a797d15.js","static/chunks/601.6dac09bcbef5036f.js"]}}';

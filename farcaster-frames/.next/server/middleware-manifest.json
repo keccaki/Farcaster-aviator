@@ -4,7 +4,9 @@
   "functions": {
     "/api/game/bet": {
       "files": [
+        "prerender-manifest.js",
         "server/edge-runtime-webpack.js",
+        "server/edge-chunks/740.js",
         "server/pages/api/game/bet.js"
       ],
       "name": "pages/api/game/bet",
@@ -17,11 +19,40 @@
       ],
       "wasm": [],
       "assets": [],
-      "environments": {}
+      "environments": {
+        "previewModeId": "a939e48837908d5183ea761720f067d3",
+        "previewModeSigningKey": "5a66a88eac191b305dc0eb14f43e00a49bf1c0df70a4ef63fa49eb7c607bf79e",
+        "previewModeEncryptionKey": "c569f655c3411151322ab23203ebd27636cae96b6a68bddda9340f6ad992b557"
+      }
+    },
+    "/api/game/cashout": {
+      "files": [
+        "prerender-manifest.js",
+        "server/edge-runtime-webpack.js",
+        "server/edge-chunks/740.js",
+        "server/pages/api/game/cashout.js"
+      ],
+      "name": "pages/api/game/cashout",
+      "page": "/api/game/cashout",
+      "matchers": [
+        {
+          "regexp": "^/api/game/cashout$",
+          "originalSource": "/api/game/cashout"
+        }
+      ],
+      "wasm": [],
+      "assets": [],
+      "environments": {
+        "previewModeId": "a939e48837908d5183ea761720f067d3",
+        "previewModeSigningKey": "5a66a88eac191b305dc0eb14f43e00a49bf1c0df70a4ef63fa49eb7c607bf79e",
+        "previewModeEncryptionKey": "c569f655c3411151322ab23203ebd27636cae96b6a68bddda9340f6ad992b557"
+      }
     },
     "/api/game/state": {
       "files": [
+        "prerender-manifest.js",
         "server/edge-runtime-webpack.js",
+        "server/edge-chunks/740.js",
         "server/pages/api/game/state.js"
       ],
       "name": "pages/api/game/state",
@@ -34,7 +65,11 @@
       ],
       "wasm": [],
       "assets": [],
-      "environments": {}
+      "environments": {
+        "previewModeId": "a939e48837908d5183ea761720f067d3",
+        "previewModeSigningKey": "5a66a88eac191b305dc0eb14f43e00a49bf1c0df70a4ef63fa49eb7c607bf79e",
+        "previewModeEncryptionKey": "c569f655c3411151322ab23203ebd27636cae96b6a68bddda9340f6ad992b557"
+      }
     }
   },
   "sortedMiddleware": []
