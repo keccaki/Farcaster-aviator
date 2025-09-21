@@ -1,10 +1,11 @@
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
+import { NeynarContextProvider } from '@neynar/react'
 import '../styles/globals.css'
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <>
+    <NeynarContextProvider clientId="2e04fdbd-fcf3-4b90-a240-d1e1137221be">
       <Head>
         <title>Aviator Crash Game</title>
         <meta name="description" content="Play the thrilling Aviator crash game directly in Farcaster" />
@@ -21,31 +22,15 @@ export default function App({ Component, pageProps }: AppProps) {
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
         
         {/* Farcaster Mini App SDK - CDN approach as per docs */}
-        <script dangerouslySetInnerHTML={{
+        <script type="module" dangerouslySetInnerHTML={{
           __html: `
-            (function() {
-              console.log('Loading Farcaster SDK...');
-              const script = document.createElement('script');
-              script.type = 'module';
-              script.textContent = \`
-                try {
-                  const { sdk } = await import('https://esm.sh/@farcaster/miniapp-sdk');
-                  window.farcasterSDK = sdk;
-                  console.log('✅ Farcaster SDK loaded successfully:', sdk);
-                  
-                  // Dispatch custom event when SDK is ready
-                  window.dispatchEvent(new CustomEvent('farcasterSDKReady', { detail: sdk }));
-                } catch (error) {
-                  console.error('Failed to load Farcaster SDK:', error);
-                  window.farcasterSDK = null;
-                }
-              \`;
-              document.head.appendChild(script);
-            })();
+            import { sdk } from 'https://esm.sh/@farcaster/miniapp-sdk'
+            window.farcasterSDK = sdk
+            console.log('Farcaster SDK loaded:', sdk)
           `
         }} />
       </Head>
       <Component {...pageProps} />
-    </>
+    </NeynarContextProvider>
   )
 }

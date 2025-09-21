@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useNeynarContext } from '@neynar/react'
 
 const GameScreen = () => {
   const [gameState, setGameState] = useState({
@@ -12,76 +13,62 @@ const GameScreen = () => {
   const [betAmount, setBetAmount] = useState(10)
   const [sdkReady, setSdkReady] = useState(false)
 
-  // Initialize Mini App
+  // Use the useNeynarContext hook from @neynar/react
+  const { user, isAuthenticated } = useNeynarContext()
+
+  // Initialize Mini App - call ready() as soon as possible per Farcaster docs
   useEffect(() => {
     const initializeApp = async () => {
       try {
-        console.log('Mini App initializing...')
+        console.log('🚀 Initializing Farcaster Mini App...')
         
-        // Fetch initial game state first
+        // Wait for Farcaster SDK to be available globally
+        let attempts = 0
+        const maxAttempts = 20
+        let currentSdk: any = null
+
+        while (attempts < maxAttempts) {
+          if (typeof window !== 'undefined' && (window as any).farcasterSDK) {
+            currentSdk = (window as any).farcasterSDK
+            console.log('✅ Farcaster SDK found globally!')
+            break
+          }
+          console.log(`Waiting for global SDK... attempt ${attempts + 1}/${maxAttempts}`)
+          await new Promise(resolve => setTimeout(resolve, 250))
+          attempts++
+        }
+
+        if (currentSdk) {
+          console.log('📦 SDK is available:', currentSdk)
+          
+          // Call sdk.actions.ready() immediately as per documentation
+          console.log('📞 Calling sdk.actions.ready()...')
+          await currentSdk.actions.ready({ disableNativeGestures: true })
+          console.log('✅ SDK ready() called successfully!')
+          setSdkReady(true)
+        } else {
+          console.warn('⚠️ SDK not available globally after', maxAttempts, 'attempts, allowing app to work anyway')
+          setSdkReady(true)
+        }
+        
+        // Fetch initial game state
         await fetchGameState()
         
         console.log('✅ Mini App initialized successfully!')
       } catch (error) {
-        console.error('Failed to initialize Mini App:', error)
-        // Still fetch game state even if SDK fails
+        console.error('❌ Failed to initialize Mini App:', error)
+        // Still try to fetch game state even if SDK fails
         try {
           await fetchGameState()
+          setSdkReady(true) // Allow app to work even without SDK
         } catch (fetchError) {
-          console.error('Failed to fetch game state:', fetchError)
+          console.error('❌ Failed to fetch game state:', fetchError)
         }
-      }
-    }
-
-    // Handle SDK ready event
-    const handleSDKReady = async (event: any) => {
-      console.log('SDK Ready event received:', event.detail)
-      try {
-        const sdk = event.detail
-        if (sdk && sdk.actions && sdk.actions.ready) {
-          console.log('Calling sdk.actions.ready()...')
-          await sdk.actions.ready()
-          console.log('✅ SDK ready() called successfully!')
-          setSdkReady(true)
-        } else {
-          console.warn('SDK actions not available')
-          setSdkReady(true) // Allow app to work
-        }
-      } catch (error) {
-        console.error('SDK ready() failed:', error)
-        setSdkReady(true) // Allow app to work even if SDK fails
-      }
-    }
-
-    // Listen for SDK ready event
-    if (typeof window !== 'undefined') {
-      window.addEventListener('farcasterSDKReady', handleSDKReady)
-      
-      // Also check if SDK is already available
-      if ((window as any).farcasterSDK) {
-        handleSDKReady({ detail: (window as any).farcasterSDK })
-      }
-      
-      // Fallback: try to call ready() after 3 seconds if SDK is available
-      const fallbackTimeout = setTimeout(() => {
-        if (!sdkReady && (window as any).farcasterSDK) {
-          console.log('Fallback: Attempting to call SDK ready()...')
-          handleSDKReady({ detail: (window as any).farcasterSDK })
-        } else if (!sdkReady) {
-          console.log('Fallback: No SDK available, allowing app to work anyway')
-          setSdkReady(true)
-        }
-      }, 3000)
-      
-      // Cleanup timeout
-      return () => {
-        clearTimeout(fallbackTimeout)
-        window.removeEventListener('farcasterSDKReady', handleSDKReady)
       }
     }
 
     initializeApp()
-  }, [])
+  }, []) // Run once on mount
 
   // Fetch current game state
   const fetchGameState = async () => {
@@ -108,7 +95,7 @@ const GameScreen = () => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          fid: 12345, // Would get from SDK context
+          fid: user?.fid || 12345, // Use actual FID from Neynar context if available
           amount: betAmount,
           roundId: gameState.roundId
         })
@@ -135,8 +122,8 @@ const GameScreen = () => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          fid: 12345,
-          betId: `bet_12345_${gameState.roundId}`,
+          fid: user?.fid || 12345,
+          betId: `bet_${user?.fid || 12345}_${gameState.roundId}`,
           multiplier: gameState.multiplier
         })
       })
@@ -152,6 +139,15 @@ const GameScreen = () => {
     } catch (error) {
       console.error('Failed to cash out:', error)
     }
+  }
+
+  // Show loading state while SDK is loading
+  if (!sdkReady) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 flex items-center justify-center">
+        <div className="text-white text-xl">Loading Farcaster SDK...</div>
+      </div>
+    )
   }
 
   if (gameState.isLoading) {
@@ -186,6 +182,11 @@ const GameScreen = () => {
         <h2 className="text-4xl font-semibold mb-2 text-yellow-300">CRASH GAME</h2>
         <p className="text-2xl text-green-300 font-medium">Ready to Fly!</p>
         <p className="text-lg text-gray-200 mt-2">Click Play to start betting!</p>
+        {user && (
+          <p className="text-sm text-gray-400 mt-2">
+            Welcome, User #{user.fid}
+          </p>
+        )}
       </div>
 
       {/* Game Status */}
@@ -301,6 +302,8 @@ const GameScreen = () => {
       {/* Footer */}
       <div className="text-center py-6 text-gray-400">
         <p className="text-lg">Powered by Farcaster Mini Apps</p>
+        <p className="text-sm mt-2">SDK Status: {sdkReady ? '✅ Ready' : '⏳ Loading...'}</p>
+        <p className="text-sm mt-1">Auth Status: {isAuthenticated ? '✅ Authenticated' : '❌ Not Authenticated'}</p>
       </div>
     </div>
   )
