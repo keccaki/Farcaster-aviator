@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNeynarContext } from '@neynar/react'
+import { useMiniAppReady } from '../hooks/useMiniAppReady'
 
 const GameScreen = () => {
   const [gameState, setGameState] = useState({
@@ -11,64 +12,17 @@ const GameScreen = () => {
   })
   const [userBalance, setUserBalance] = useState(1000)
   const [betAmount, setBetAmount] = useState(10)
-  const [sdkReady, setSdkReady] = useState(false)
 
   // Use the useNeynarContext hook from @neynar/react
   const { user, isAuthenticated } = useNeynarContext()
+  
+  // Use the new Mini App ready hook
+  const { sdkReady, isMiniApp, error: miniAppError } = useMiniAppReady()
 
-  // Initialize Mini App - call ready() as soon as possible per Farcaster docs
+  // Fetch initial game state independent of SDK availability
   useEffect(() => {
-    const initializeApp = async () => {
-      try {
-        console.log('🚀 Initializing Farcaster Mini App...')
-        
-        // Wait for Farcaster SDK to be available globally
-        let attempts = 0
-        const maxAttempts = 20
-        let currentSdk: any = null
-
-        while (attempts < maxAttempts) {
-          if (typeof window !== 'undefined' && (window as any).farcasterSDK) {
-            currentSdk = (window as any).farcasterSDK
-            console.log('✅ Farcaster SDK found globally!')
-            break
-          }
-          console.log(`Waiting for global SDK... attempt ${attempts + 1}/${maxAttempts}`)
-          await new Promise(resolve => setTimeout(resolve, 250))
-          attempts++
-        }
-
-        if (currentSdk) {
-          console.log('📦 SDK is available:', currentSdk)
-          
-          // Call sdk.actions.ready() immediately as per documentation
-          console.log('📞 Calling sdk.actions.ready()...')
-          await currentSdk.actions.ready({ disableNativeGestures: true })
-          console.log('✅ SDK ready() called successfully!')
-          setSdkReady(true)
-        } else {
-          console.warn('⚠️ SDK not available globally after', maxAttempts, 'attempts, allowing app to work anyway')
-          setSdkReady(true)
-        }
-        
-        // Fetch initial game state
-        await fetchGameState()
-        
-        console.log('✅ Mini App initialized successfully!')
-      } catch (error) {
-        console.error('❌ Failed to initialize Mini App:', error)
-        // Still try to fetch game state even if SDK fails
-        try {
-          await fetchGameState()
-          setSdkReady(true) // Allow app to work even without SDK
-        } catch (fetchError) {
-          console.error('❌ Failed to fetch game state:', fetchError)
-        }
-      }
-    }
-
-    initializeApp()
-  }, []) // Run once on mount
+    fetchGameState().catch((e) => console.error('Failed to fetch game state:', e))
+  }, [])
 
   // Fetch current game state
   const fetchGameState = async () => {
@@ -145,7 +99,7 @@ const GameScreen = () => {
   if (!sdkReady) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 flex items-center justify-center">
-        <div className="text-white text-xl">Loading Farcaster SDK...</div>
+        <div className="text-white text-xl">Preparing mini app…</div>
       </div>
     )
   }
@@ -304,6 +258,10 @@ const GameScreen = () => {
         <p className="text-lg">Powered by Farcaster Mini Apps</p>
         <p className="text-sm mt-2">SDK Status: {sdkReady ? '✅ Ready' : '⏳ Loading...'}</p>
         <p className="text-sm mt-1">Auth Status: {isAuthenticated ? '✅ Authenticated' : '❌ Not Authenticated'}</p>
+        <p className="text-sm mt-1">
+          Mini App Env: {isMiniApp ? '✅ Detected' : '🌐 Web'}
+          {miniAppError ? ' • SDK init degraded' : ''}
+        </p>
       </div>
     </div>
   )
