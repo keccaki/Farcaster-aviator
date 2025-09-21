@@ -180,7 +180,7 @@ const GameScreen = () => {
           </div>
           <div>
             <div className="text-gray-300 text-xl mb-2">Round ID</div>
-            <div className="text-2xl font-mono">{gameState.roundId.slice(-8)}</div>
+            <div className="text-2xl font-mono">{gameState.roundId ? gameState.roundId.slice(-8) : 'Loading...'}</div>
           </div>
         </div>
       </div>
